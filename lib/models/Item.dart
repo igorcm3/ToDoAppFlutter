@@ -7,6 +7,8 @@ class Item {
     title = json['title'];
     done = json['done'];
   }
+
+  set value(bool value) {}
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['title'] = this.title;
