@@ -24,10 +24,6 @@ class HomePage extends StatefulWidget {
   var items = new List<Item>();
   HomePage() {
     items = [];
-
-    // items.add(Item(title: "Banana", done: false));
-    // items.add(Item(title: "Abacate", done: true));
-    // items.add(Item(title: "Laranja", done: false));
   }
   @override
   _HomePageState createState() => _HomePageState();
@@ -77,49 +73,86 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: TextFormField(
-          controller: newTaskCtrl,
-          keyboardType: TextInputType.text,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-          ),
-          decoration: InputDecoration(
-            labelText: "Nova tarefa",
-            labelStyle: TextStyle(color: Colors.white),
-          ),
-        ),
+        centerTitle: true,
+        backgroundColor: Colors.black,
+        title: Text("Lista de tarefas"),
       ),
-      body: ListView.builder(
-        itemCount: widget.items.length,
-        itemBuilder: (BuildContext context, int index) {
-          final item = widget.items[index];
-          return Dismissible(
-            child: CheckboxListTile(
-              title: Text(item.title),
-              value: item.done,
-              onChanged: (value) {
-                setState(() {
-                  item.done = value;
-                  save();
-                });
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          SizedBox(height: 10),
+          Row(
+            children: <Widget>[
+              SizedBox(width: 10),
+              Flexible(
+                child: Container(
+                  height: 50,
+                  child: TextFormField(
+                    controller: newTaskCtrl,
+                    keyboardType: TextInputType.text,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: "Digite a tarefa",
+                      labelStyle: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 10),
+              SizedBox(
+                height: 50,
+                child: RaisedButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      side: BorderSide(color: Colors.red)),
+                  onPressed: add,
+                  color: Colors.red,
+                  textColor: Colors.white,
+                  child: Text("Adicionar".toUpperCase(),
+                      style: TextStyle(fontSize: 16)),
+                ),
+              ),
+              SizedBox(width: 10),
+            ],
+          ),
+          Container(
+            padding: EdgeInsets.all(10.0),
+            child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: widget.items.length,
+              itemBuilder: (BuildContext context, int index) {
+                final item = widget.items[index];
+                return Dismissible(
+                  child: CheckboxListTile(
+                    activeColor: Colors.green,
+                    title: Text(item.title),
+                    value: item.done,
+                    onChanged: (value) {
+                      setState(() {
+                        item.done = value;
+                        save();
+                      });
+                    },
+                  ),
+                  key: Key(item.title),
+                  background: Container(
+                    color: Colors.red.withOpacity(0.2),
+                  ),
+                  onDismissed: (direction) {
+                    //print(direction);
+                    remove(index);
+                  },
+                );
               },
             ),
-            key: Key(item.title),
-            background: Container(
-              color: Colors.red.withOpacity(0.2),
-            ),
-            onDismissed: (direction) {
-              //print(direction);
-              remove(index);
-            },
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: add, // passa a função de adicionar ao botão
-        backgroundColor: Colors.pink,
-        child: Icon(Icons.add),
+          ),
+        ],
       ),
     );
   }
